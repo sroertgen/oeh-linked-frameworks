@@ -23,7 +23,7 @@ Analyzing the current situation I see the following benefits:
 - one of the **biggest benefits** of this approach is the ability of easy drawing relations. In Germany we have 16 states, each having their own curriculums, but of course the content is widley overlapping (is has to be for the nation wide Abitur to work). Now think of this: Teachers are knowing their state curriculum very well, it's their daily working basis. If we provide them a solution to upload material they want to share and they are willing to attach some metadata to it, like framework information, teachers teaching the same aspect of the curriuculum can find it easily. **BUT NOW THINK OF THAT**: If we draw relations in the background between the frameworks a teacher/learner from another state can even find material  in HER state curriculum that was not originally attached there. Due to the linked data technology and the relations drawn it can show up there and so make life of every teacher/learner easier.
 
 
-## So what did you build?
+## So what did I build?
 
 It's basically a tool for visualizing framework data.
 Since there was no machine readable data, I crawled one state (Bavaria, since they have a [nice structured website](https://www.lehrplanplus.bayern.de/)), processed the data and put it into [some rdf compatible model](https://sroertgen.github.io/oeh-framework-bayern/) I developed. I heavily reused ideas proposed in the [k12ocx](https://k12ocx.github.io/k12ocx-specs/) project.
@@ -41,7 +41,7 @@ As a direct SPARQL-GUI is also nice, I attached [YASGUI](https://triply.cc/docs/
 I packed everythink in Docker containers, so you can test this app easily on your local machine. Do this:
 
 1. [Get Docker](https://docs.docker.com/get-docker/)
-1. clone this repo witch `git clone https://github.com/sroertgen/oeh-linked-frameworks.git``
+1. clone this repo witch `git clone https://github.com/sroertgen/oeh-linked-frameworks.git`
 1. cd into the repo and run `docker-compose up`
 1. go to <http://localhost:1337>
 1. click on `ADD` and select something. you can also add multiple selections.
