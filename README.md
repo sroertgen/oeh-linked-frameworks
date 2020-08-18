@@ -1,68 +1,53 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# OEH-Framework-Visuals
 
-## Available Scripts
+This is some little SPARQL-App going to be used for demo purposes. 
 
-In the project directory, you can run:
+## Why?
 
-### `npm start`
+Frameworks in Germany are currently not published machine-readable. That is very sad. Insitutional learning takes always place in some kind of framework/curriculum and teachers are very used to them. Therefore material published should be able to be assigned to a certain framework or certain parts of it. Teachers (and students) would also be helped to be able to use framework data as a filter, when searching for teaching/learning material.
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+To accomplish this framework data has to be machine-readable.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+Currently there are few dedicated persons coming together thinking about publishing their state-wide school curriculums data machine-readable. Though there is yet no common schema to be used and people coming from different backgrounds hae different likings writing down their curriculum (mainly XML or JSON).
 
-### `npm test`
+This is why I want to propose the idea of jumping into the Semantic Web World!
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Analyzing the current situation I see the following benefits:
 
-### `npm run build`
+- high interoperability
+- free to choose serialization format
+- AAA-approach (Anyone can say anything about any topic): though we have dedicated people it might be hard to fast decide on a model really going for everyone. Living in the semantic world this is no problem. We can easily add relations later on and connect the models
+- We more or less get the API for free. Modelling based on RDF, we can easily load our data in some triple store and connect some Sparql endpoint to it (it is really quite easy!). All our data is there and there is a huge ecosystem of libraries in each programming language to make use of it
+- Other big public players are already in the game. The European Union developed [ESCO](https://ec.europa.eu/esco/portal/home), a European wide multillingual classification of Skills, Competences, Qualifications and Occupations.
+- --> Just imagine the possibilities when connecting frameworks to this catalogue and the ecosystem of apps being able to guide students to the job they want
+- one of the **biggest benefits** of this approach is the ability of easy drawing relations. In Germany we have 16 states, each having their own curriculums, but of course the content is widley overlapping (is has to be for the nation wide Abitur to work). Now think of this: Teachers are knowing their state curriculum very well, it's their daily working basis. If we provide them a solution to upload material they want to share and they are willing to attach some metadata to it, like framework information, teachers teaching the same aspect of the curriuculum can find it easily. **BUT NOW THINK OF THAT**: If we draw relations in the background between the frameworks a teacher/learner from another state can even find material  in HER state curriculum that was not originally attached there. Due to the linked data technology and the relations drawn it can show up there and so make life of every teacher/learner easier.
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+## So what did you build?
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+It's basically a tool for visualizing framework data.
+Since there was no machine readable data, I crawled one state (Bavaria, since they have a [nice structured website](https://www.lehrplanplus.bayern.de/)), processed the data and put it into [some rdf compatible model](https://sroertgen.github.io/oeh-framework-bayern/) I developed. I heavily reused ideas proposed in the [k12ocx](https://k12ocx.github.io/k12ocx-specs/) project.
 
-### `npm run eject`
+With that data I was able to set up a triple store using [Apache TDB](https://jena.apache.org/documentation/tdb/) and connect some SPARQL-endpoint to it using [Apache Fuseki](https://jena.apache.org/documentation/fuseki2/).
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Now the Sparql endpoint was ready at hand wating to be queried...
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+People like to see things, so what would be more appropriate for a linked data app than to build some visualization tool, to display the data? So I set up some React app, making queries to the endpoint with the help of the communica tool [@comunica/actor-init-sparql](https://www.npmjs.com/package/@comunica/actor-init-sparql) and visualizing them with [VisJs Network](https://visjs.github.io/vis-network/docs/network/), actually using [react-graph-vis](https://github.com/crubier/react-graph-vis#readme).
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+As a direct SPARQL-GUI is also nice, I attached [YASGUI](https://triply.cc/docs/yasgui-api#using-yasgui-in-react) to be able to explore the model (YASGUI -> YET ANOTHER SPARQL GUI, got to love that. Actually I did not find so many well documented ones, so I'm happy for further suggestions, though I'm totally happy with YASGUI).
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Run it
 
-## Learn More
+I packed everythink in Docker containers, so you can test this app easily on your local machine. Do this:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+1. [Get Docker](https://docs.docker.com/get-docker/)
+1. clone this repo witch `git clone https://github.com/sroertgen/oeh-linked-frameworks.git``
+1. cd into the repo and run `docker-compose up`
+1. go to <http://localhost:1337>
+1. click on `ADD` and select something. you can also add multiple selections.
+1. click `BUILD GRAPH`. Hopefully something will happen and you see the framework data for your selection.
+1. Play around, report bugs.
+1. Cancel with `Ctrl-c` and run `docker-compose down`.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+This is of course just the first part. I will continue to get some other curricula data and then draw relations between the graphs to show the big benefits of using this approach.
 
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify

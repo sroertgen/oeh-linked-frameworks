@@ -125,8 +125,9 @@ const Data = ({ id }) => {
           </MenuItem>
           {graphs
             .sort((a, b) => a.localeCompare(b, 'de', { sensitivity: 'base' }))
+            .filter(e => e.includes("bayern"))
             .map((e, i) => {
-              const id = graphs[i];
+              const id = e;
               return (
                 <MenuItem key={id} value={id}>
                   {id.split('/')[id.split('/').length - 2]}
