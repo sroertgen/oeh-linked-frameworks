@@ -1,5 +1,6 @@
-module.exports = {
-  queryData: (endpoint, graph, select, property) => {
+import {cleanURL} from "./utils";
+
+export const queryData = (endpoint, graph, select, property) => {
     const query = `
       PREFIX sdo: <http://schema.org/>
       PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -19,8 +20,9 @@ module.exports = {
     const sources = [{ type: 'sparql', value: `${endpoint}` }];
 
     return { query, target, sources };
-  },
-  queryBuildSubGraph: (discipline, level, context, graph, endpoint) => {
+  }
+
+export const queryBuildSubGraph = (discipline, level, context, graph, endpoint) => {
     const query = `
     PREFIX sdo: <http://schema.org/>
     PREFIX curr: <http://w3id.org/openeduhub/curricula/curriculum_bayern/>
@@ -55,8 +57,9 @@ module.exports = {
   }`;
     const sources = [{ type: 'sparql', value: `${endpoint}` }];
     return { query, sources };
-  },
-  queryBuildItemGraph: (nodes, itemGraph, endpoint) => {
+  }
+
+export const queryBuildItemGraph = (nodes, itemGraph, endpoint) => {
     const query = `
     PREFIX sdo: <http://schema.org/>
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -78,8 +81,9 @@ module.exports = {
     const sources = [{ type: 'sparql', value: `${endpoint}` }];
 
     return { query, sources };
-  },
-  queryNodeName: {
+  }
+
+export const queryNodeName = {
     query: `
     PREFIX sdo: <http://schema.org/>
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -93,8 +97,9 @@ module.exports = {
     `,
     targetName: '?name',
     targetNode: '?s',
-  },
-  queryHasPart: {
+  }
+
+export const queryHasPart = {
     query: `
     PREFIX sdo: <http://schema.org/>
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -109,8 +114,9 @@ module.exports = {
     `,
     targetFrom: '?s',
     targetTo: '?o',
-  },
-  queryItemNodeName: {
+  }
+
+export const queryItemNodeName = {
     query: `
     PREFIX sdo: <http://schema.org/>
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -124,8 +130,9 @@ module.exports = {
     `,
     targetName: '?name',
     targetNode: '?s',
-  },
-  queryIsPartOf: {
+  }
+
+export const queryIsPartOf = {
     query: `
     PREFIX sdo: <http://schema.org/>
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -140,8 +147,9 @@ module.exports = {
     `,
     targetFrom: '?o',
     targetTo: '?s',
-  },
-  queryCurriculaGraphs: (endpoint) => {
+  }
+
+export const queryCurriculaGraphs = (endpoint) => {
     const query = `
  SELECT DISTINCT ?g 
 WHERE {
@@ -151,8 +159,9 @@ WHERE {
     const sources = [{ type: 'sparql', value: `${endpoint}` }];
     const target = '?g';
     return { query, sources, target };
-  },
-  queryForLevelOptions: (graph, endpoint, discipline) => {
+  }
+
+export const queryForLevelOptions = (graph, endpoint, discipline) => {
     const query = `
     PREFIX sdo: <http://schema.org/>
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -183,8 +192,9 @@ WHERE {
       sources,
       targetLevel,
     };
-  },
-  queryForContextOptions: (graph, endpoint, level, discipline) => {
+  }
+
+export const queryForContextOptions = (graph, endpoint, level, discipline) => {
     const query = `
     PREFIX sdo: <http://schema.org/>
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -218,13 +228,101 @@ WHERE {
       sources,
       targetLevel,
     };
-  },
-  defaultQuery: `
+  }
+
+export const queryForType = async(node) => {
+    console.log(node)
+    const query = `
+JSON {
+  "type": ?type
+}
+
+WHERE {
+  <${node}> a ?type .
+}
+`;
+    const queryUrl = cleanURL(`http://localhost:3030/ds/sparql?query=${query}`);
+    let response = await fetch(queryUrl)
+    if (response.status !== 200) {
+      console.log(
+        "Looks like there was a problem. Status Code: " + response.status
+        );
+    return [{ property: "No data found, might be a root node" }];
+    };
+    let data = await response.json();
+    return data;
+  }
+
+export const queryForCourseProperties = async(node) => {
+    const query = `
+PREFIX sdo: <http://schema.org/>
+PREFIX oeh: <http://w3id.org/openeduhub/vocabs/>
+
+SELECT DISTINCT ?name ?about ?courseCode ?description ?license ?creator ?eduLevel ?eduContext ?publisher
+
+
+WHERE {
+  <${node}> sdo:name ?name ;
+    sdo:courseCode ?courseCode ;
+    sdo:about ?bAbout ;
+    sdo:description ?description ;
+    sdo:license ?license ;
+    sdo:creator ?bCreator ;
+    sdo:educationalLevel ?bLevel ;
+    sdo:publisher ?bPublisher ;
+    oeh:educationalContext ?bEduContext .
+  ?bAbout sdo:name ?about .
+  ?bCreator sdo:name ?creator .
+  ?bLevel sdo:name ?eduLevel .
+  ?bEduContext sdo:name ?eduContext .
+  ?bPublisher sdo:name ?publisher .
+}
+    `;
+    const queryUrl = cleanURL(`http://localhost:3030/ds/sparql?query=${query}`);
+    let response = await fetch(queryUrl);
+
+    if (response.status !== 200) {
+      console.log(
+        "Looks like there was a problem. Status Code: " + response.status
+      );
+      return [{ property: "No data found, might be a root node" }];
+    }
+
+    let data = await response.json();
+    return data;
+  }
+
+export const queryForItemProps = async(node) => {
+  const query = `
+  PREFIX sdo: <http://schema.org/>
+
+SELECT DISTINCT ?name ?lrt ?isPartOf
+
+  WHERE {
+    <${node}> sdo:name ?name ;
+      sdo:isPartOf ?isPartOf ;
+      sdo:learningResourceType ?bLRT .
+    ?bLRT sdo:name ?lrt .
+  }
+  `;
+  const queryURL = cleanURL(`http://localhost:3030/ds/sparql?query=${query}`);
+  let response = await fetch(queryURL)
+  if (response.status !== 200) {
+    console.log(
+      "Looks like there was a problem. Status Code: " + response.status
+    );
+    return [{ property: "No data found, might be a root node" }];
+  }
+
+  let data = await response.json();
+  return data;
+}
+
+export const defaultQuery = `
 SELECT ?s ?p ?o
 WHERE {
   GRAPH <http://w3id.org/openeduhub/curricula/curriculum_bayern/#> {
     ?s ?p ?o
   }
 } LIMIT 100
-  `,
-};
+  `;

@@ -1,11 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Graph from 'react-graph-vis';
 import { useSelector } from 'react-redux';
+import { querySparqlForProperties } from '../../api/sparql/querySparql';
+
 // import './styles.css';
 // need to import the vis network css in order to show tooltip
 // import './network.css';
 
-function ReactGraph() {
+import { 
+  queryForCourseProperties,
+  queryForItemProps,
+  queryForType
+} from '../../api/sparql/queries';
+
+function ReactGraph({setNode}) {
   const nodesAndEdges = useSelector((state) => state.requestNodesAndEdges.nodesAndEdges);
 
   const graph = {
@@ -38,7 +46,23 @@ function ReactGraph() {
   const events = {
     select(event) {
       const { nodes, edges } = event;
-    },
+      // check if item or course node is selected, then get respective content
+      queryForType(nodes)
+        .then(data => {
+          const type = data[0].type;
+          if (type === "http://schema.org/Course") {
+            queryForCourseProperties(nodes).then((data) => {
+              setNode(data.results.bindings)
+            });
+          } else if (type === "http://schema.org/CreativeWork") {
+            queryForItemProps(nodes).then(data => {
+              setNode(data.results.bindings)
+            });
+          } else { setNode([
+            {"error": 
+              {"value": "No data found, might be a root node?"}}])}
+        });
+    }
   };
   return (
     <Graph

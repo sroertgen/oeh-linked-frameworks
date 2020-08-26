@@ -18,14 +18,14 @@ import {
   CHANGE_GRAPH
 } from "./constants";
 
-import querySparql from '../api/sparql/querySparql';
+import {querySparql} from '../api/sparql/querySparql';
 import buildNodesAndEdges from '../api/sparql/buildNodesAndEdges';
 import { getComponentData } from '../api/sparql/utils';
 
-const {
+import {
   queryData,
   queryCurriculaGraphs,
-} = require('../api/sparql/queries');
+} from '../api/sparql/queries';
 
 export const requestGraphsFromSparql = (endpoint) => (dispatch) => {
   dispatch({ type: REQUEST_PENDING });

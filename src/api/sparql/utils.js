@@ -1,6 +1,6 @@
 import { queryForNodes, queryForEdges } from './queryForNodesAndEdges';
 
-const getNodesAndEdges = async (subGraph, courseCode, nodesQuery, edgesQuery) => {
+export const getNodesAndEdges = async (subGraph, courseCode, nodesQuery, edgesQuery) => {
   const N3 = require('n3');
   // create N3 store to query
   const store = new N3.Store();
@@ -34,7 +34,7 @@ const getNodesAndEdges = async (subGraph, courseCode, nodesQuery, edgesQuery) =>
   return { nodes, edges };
 };
 
-const getPrimaryNodes = (nodes, edges) => {
+export const getPrimaryNodes = (nodes, edges) => {
   const allNodes = [];
   nodes.map((e) => allNodes.push(e.id));
   const allTos = [];
@@ -43,7 +43,7 @@ const getPrimaryNodes = (nodes, edges) => {
   return primaryNodes;
 };
 
-const placeOnCircle = (nodes) => {
+export const placeOnCircle = (nodes) => {
   const angle = Math.random() * Math.PI * 2;
   const x = Math.cos(angle) * 400;
   const y = Math.sin(angle) * 400;
@@ -55,7 +55,7 @@ const placeOnCircle = (nodes) => {
   return { nodes };
 };
 
-const getComponentData = (componentId, selectId, value, dataFromComponents) => {
+export const getComponentData = (componentId, selectId, value, dataFromComponents) => {
   const deepmerge = require('deepmerge');
   const overwriteMerge = (destinationArray, sourceArray, options) => sourceArray;
   const compData = {};
@@ -68,7 +68,7 @@ const getComponentData = (componentId, selectId, value, dataFromComponents) => {
   return merged;
 };
 
-const queryForLevels = async (
+export const queryForLevels = async (
   query,
   sources,
   targetLevel
@@ -96,10 +96,10 @@ const queryForLevels = async (
   }
 };
 
-export {
-  getNodesAndEdges,
-  getPrimaryNodes,
-  placeOnCircle,
-  getComponentData,
-  queryForLevels
+export const getNodeProperties = (node) => {
+  
+}
+
+export const cleanURL = (url) => {
+  return url.trim().replace(/(\r\n|\n|\r)/gm, "");
 };

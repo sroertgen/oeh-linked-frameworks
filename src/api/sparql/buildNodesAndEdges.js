@@ -2,10 +2,14 @@ import buildSubGraph from './buildSubGraph';
 
 import { getNodesAndEdges, getPrimaryNodes, placeOnCircle } from './utils';
 
-const {
-  queryNodeName, queryItemNodeName, queryHasPart, queryIsPartOf,
-} = require('./queries');
-const { queryBuildSubGraph, queryBuildItemGraph } = require('./queries');
+import {
+  queryNodeName,
+  queryItemNodeName,
+  queryHasPart,
+  queryIsPartOf,
+  queryBuildSubGraph,
+  queryBuildItemGraph,
+} from "./queries";
 
 const buildNodesAndEdges = async (buildData) => {
   const nodesAll = [];

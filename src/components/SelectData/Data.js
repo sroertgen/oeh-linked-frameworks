@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getDataFromComponent, removeChild } from '../../store/actions';
-import querySparql from '../../api/sparql/querySparql';
+import {querySparql} from '../../api/sparql/querySparql';
 import { queryForLevels } from "../../api/sparql/utils";
+
+import {
+  queryData,
+  queryForLevelOptions,
+  queryForContextOptions,
+} from "../../api/sparql/queries";
 
 import {
   makeStyles, 
@@ -23,12 +29,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Data = ({ id }) => {
-  const {
-    queryData,
-    queryForLevelOptions,
-    queryForContextOptions
-  } = require('../../api/sparql/queries');
-
   const dispatch = useDispatch();
 
   const data = useSelector((state) => state.componentData.data);
