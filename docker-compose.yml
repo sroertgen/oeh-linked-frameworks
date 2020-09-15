@@ -17,11 +17,6 @@ services:
       ENABLE_DATA_WRITE: "true"
       ENABLE_UPDATE: "true"
       QUERY_TIMEOUT: 600000
-    healthcheck:
-        test: ["CMD", "curl", "-f", "http://localhost:3030/ds/sparql"]
-        interval: 30s
-        timeout: 10s
-        retries: 5
 
   app:
     container_name: react-app
