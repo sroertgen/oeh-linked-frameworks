@@ -51,3 +51,11 @@ I packed everything in Docker containers, so you can test this app easily on you
 1. Cancel with `Ctrl-c` and run `docker-compose down`.
 
 This is of course just the first part. I will continue to get some other curricula data and then draw relations between the graphs to show the big benefits of using this approach.
+
+## Caveats for production
+
+- Run in production with `docker-compose -f docker-compose.prod.yml up -d --build`
+- set a good password for traefik-dashboard access:
+  - To create user:password pair, it's possible to use this command:
+  `echo $(htpasswd -nb user password) | sed -e s/\\$/\\$\\$/g`
+  - paste result to appropriate traefik basic auth setting
