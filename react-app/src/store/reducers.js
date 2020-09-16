@@ -25,7 +25,7 @@ const initialStateOptions = {
 };
 
 const initialStateEndpointURL = {
-  endpointURL: 'http://localhost:3030/ds/sparql',
+  endpointURL: '/store/ds/sparql',
 };
 
 const initialStateCurriculumsGraph = {

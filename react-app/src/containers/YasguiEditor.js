@@ -6,8 +6,10 @@ import  {defaultQuery} from "../api/sparql/queries"
 export default function YasguiEditor() {
   
     useEffect(() => {
+      // get hostname of current location
+      const hostname = window.location.hostname;
       const yasgui = new Yasgui(document.getElementById("yasgui"), {
-        requestConfig: { endpoint: "http://localhost:3030/ds/sparql" },
+        requestConfig: { endpoint: `http://${hostname}/store/ds/sparql` },
         copyEndpointOnNewTab: false,
       });
       const yasque = yasgui.getTab().getYasqe();

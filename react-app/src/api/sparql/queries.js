@@ -241,7 +241,7 @@ WHERE {
   <${node}> a ?type .
 }
 `;
-    const queryUrl = cleanURL(`http://localhost:3030/ds/sparql?query=${query}`);
+    const queryUrl = cleanURL(`/store/ds/sparql?query=${query}`);
     let response = await fetch(queryUrl)
     if (response.status !== 200) {
       console.log(
@@ -278,7 +278,7 @@ WHERE {
   ?bPublisher sdo:name ?publisher .
 }
     `;
-    const queryUrl = cleanURL(`http://localhost:3030/ds/sparql?query=${query}`);
+    const queryUrl = cleanURL(`/store/ds/sparql?query=${query}`);
     let response = await fetch(queryUrl);
 
     if (response.status !== 200) {
@@ -305,7 +305,7 @@ SELECT DISTINCT ?name ?lrt ?isPartOf
     ?bLRT sdo:name ?lrt .
   }
   `;
-  const queryURL = cleanURL(`http://localhost:3030/ds/sparql?query=${query}`);
+  const queryURL = cleanURL(`/store/ds/sparql?query=${query}`);
   let response = await fetch(queryURL)
   if (response.status !== 200) {
     console.log(
