@@ -45,8 +45,6 @@ services:
         target: /fuseki-base/databases
     environment:
       ADMIN_PASSWORD: ${PW}
-      ENABLE_DATA_WRITE: "true"
-      ENABLE_UPDATE: "true"
       QUERY_TIMEOUT: 600000
     labels:
       - "traefik.enable=true"
